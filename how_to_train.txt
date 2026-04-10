@@ -1,0 +1,11 @@
+>> conda activate SARCNN
+>> cd /home/ssavner/sid/2026-CVPR-NSP_sid
+
+python train_nsp_tbsn.py \
+  --train_dir "./datasets/KLSG_train_patched/*.png" \
+  --val_rn_dir "./datasets/KLSG_test_sets/noisy_test_dataset/*.png" \
+  --val_gt_dir "./datasets/KLSG_test_sets/noisy_test_dataset/*.png" \
+  --bs 4 \
+  --ps 160 \
+  --lr 3e-4 \
+  --gpuid 0
