@@ -11,9 +11,9 @@ from dataloader import SIDD_Ben_folder
 from torchvision.utils import save_image
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--in_dir', type=str, default='datasets/SIDD/valid_data/SIDD_Ben') # SIDD Ben
+parser.add_argument('--in_dir', type=str, default='datasets/KLSG_test_sets/noisy_test_dataset') # SIDD Ben
 parser.add_argument('--ids', type=int, default=2, help='test stride')
-parser.add_argument('--model', type=str, default='./ckpts/nsp_tbsn_noseed_it66_3712_8853.pth',)
+parser.add_argument('--model', type=str, default='./ckpts/nsp_tbsn_seed10_it130_3728_8888.pth',)
 parser.add_argument('--sr_rec', type=bool, default=False, help='sr reconstruction')
 args = parser.parse_args()
 
