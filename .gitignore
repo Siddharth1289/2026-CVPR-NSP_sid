@@ -2,3 +2,4 @@ ckpts/
 datasets/
 results/
 __pycache__/
+datasets/KLSG_train_patched/
