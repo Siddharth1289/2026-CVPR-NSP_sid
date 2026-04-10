@@ -1,0 +1,3 @@
+python test_sidd_v_tbsn.py \
+  --model ./ckpts/nsp_tbsn_seed10_it130_3728_8888.pth \
+  --in_dir datasets/KLSG_test_sets/noisy_test_dataset
