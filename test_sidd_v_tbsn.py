@@ -62,10 +62,17 @@ def test(loader, model):
             input = input.to(device)
             ''' use PD '''
             im, sz = pixel_unshuffle(input) # [B*4, C, H/2, W/2]  (H,W)
-            im_denoised = pixel_shuffle(model(im), sz, args.sr_rec) # [B*4, C, H, W]-avg->[B,C,H,W]
-            if args.sr_rec:
-                sr_pd, sz2 = pixel_unshuffle(im_denoised) # [B*4, C, H/2, W/2]
-                im_denoised = pixel_shuffle(model(sr_pd), sz2, sr_rec=False) # ->[B*4,C,H,W]->[B,C,H,W]
+        # Padding for TBSN window size (8)
+        h, w = im.shape[2], im.shape[3]
+        pad_h = (32 - h % 32) % 32
+        pad_w = (32 - w % 32) % 32
+        im_p = torch.nn.functional.pad(im, (0, pad_w, 0, pad_h), mode='reflect')
+        with torch.no_grad():
+            out_p = model(im_p)
+        im_denoised = out_p[:, :, :h, :w]
+        if args.sr_rec:
+            sr_pd, sz2 = pixel_unshuffle(im_denoised) # [B*4, C, H/2, W/2]
+            im_denoised = pixel_shuffle(model(sr_pd), sz2, sr_rec=False) # ->[B*4,C,H,W]->[B,C,H,W]
             ''' direct (better) '''
             # im_denoised = model(input)
 
@@ -80,7 +87,7 @@ def test(loader, model):
 
 if __name__ == '__main__':
     model = TBSN_NSP(ids=args.ids).to(device)
-    checkpoint = torch.load(args.model, weights_only=True)
+    checkpoint = torch.load(args.model, weights_only=False)
     if isinstance(checkpoint, dict) and 'model_state_dict' in checkpoint:
         state_dict = checkpoint['model_state_dict']
     else:
